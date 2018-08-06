@@ -19,14 +19,14 @@
   <!-- endinject -->
   <link rel="shortcut icon" href="../../images/favicon.png" />
 
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script> 
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
   <script src="http://malsup.github.com/jquery.form.js"></script>
-  <script> 
-      // wait for the DOM to be loaded 
+  <script>
+      // wait for the DOM to be loaded
       const loaded_sections = []
       const base = "https://foodie-server-prod.herokuapp.com"
-      $(document).ready(function() { 
-            // bind 'myForm' and provide a simple callback function 
+      $(document).ready(function() {
+            // bind 'myForm' and provide a simple callback function
             $.urlParam = function(name){
               var results = new RegExp('[\?&]' + name + '=([^]*)').exec(window.location.href);
               if (results==null){
@@ -62,7 +62,7 @@
                 }
               })
             });
-            $('#myForm').submit(function() { 
+            $('#myForm').submit(function() {
                 $.ajax({
                     type: 'PUT',
                     url: $(this).attr('action') + '/' + update_val,
@@ -73,9 +73,9 @@
                     }
                 })
                 return false;
-            }); 
+            });
 
-            $('#myForm2').submit(function() { 
+            $('#myForm2').submit(function() {
               const new_sections = $("#myForm2").serializeArray().map(function(v) {return v.value});
               let promise = $.Deferred().resolve().promise();
               $.each(new_sections, function(index, value) {
@@ -122,13 +122,13 @@
           </div>
           `).insertBefore($('#myForm2')[0][$('#myForm2')[0].length - 2]);
       }
-  </script> 
+  </script>
 </head>
 
 <body>
   <div class="container-scroller">
-    <div class="container-fluid page-body-wrapper">
-      <div class="main-panel">
+    <!-- <div class="container-fluid page-body-wrapper"> -->
+      <div class="main-panel" style="width:100%;">
         <div class="content-wrapper">
           <div class="row">
             <div class="col-md-6 d-flex align-items-stretch grid-margin">
@@ -193,21 +193,12 @@
               </div>
             </div>
           </div>
-        <footer class="footer">
-          <div class="container-fluid clearfix">
-            <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © 2018
-              <a href="http://www.bootstrapdash.com/" target="_blank">Bootstrapdash</a>. All rights reserved.</span>
-            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with
-              <i class="mdi mdi-heart text-danger"></i>
-            </span>
-          </div>
-        </footer>
         <!-- partial -->
       </div>
       <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
-  </div>
+  <!-- </div> -->
   <!-- container-scroller -->
   <!-- plugins:js -->
   <script src="../../vendors/js/vendor.bundle.base.js"></script>
