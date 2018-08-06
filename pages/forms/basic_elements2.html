@@ -23,23 +23,105 @@
   <script src="http://malsup.github.com/jquery.form.js"></script>
   <script> 
       // wait for the DOM to be loaded 
+      const loaded_sections = []
+      const base = "https://foodie-server-prod.herokuapp.com"
       $(document).ready(function() { 
             // bind 'myForm' and provide a simple callback function 
-            console.log($('#myForm'))
+            $.urlParam = function(name){
+              var results = new RegExp('[\?&]' + name + '=([^]*)').exec(window.location.href);
+              if (results==null){
+                 return null;
+              }
+              else{
+                 return results[1] || 0;
+              }
+            }
+            const update_val = $.urlParam('id');
+
+            $.ajax({
+              type: 'GET',
+              url: base + '/restaurant/' + update_val,
+              success: function(json) {
+                $('#name').val(json["name"]);
+                $('#latitude').val(json["latitude"]);
+                $('#longitude').val(json["longitude"]);
+                $('#description').val(json["description"]);
+                $('#phone_number').val(json["phone_number"]);
+                $('#cuisine_type').val(json["cuisine_type"]);
+              }
+            }).then( function() {
+              return $.ajax({
+                type: 'GET',
+                url: base + '/restaurant/' + update_val +'/menu',
+                success: function(json) {
+                  $.each(json, function(index, value) {
+                    section = value[0]
+                    loaded_sections.push(section)
+                    onClick(section);
+                  });
+                }
+              })
+            });
             $('#myForm').submit(function() { 
                 $.ajax({
-                    type: 'POST',
-                    url: $(this).attr('action'),
+                    type: 'PUT',
+                    url: $(this).attr('action') + '/' + update_val,
                     data: $('#myForm').serialize(),
                     dataType: 'json',
                     success: function(json) {
-                       window.location.href = "basic_elements2.html?id=" + json['id'];
-                       console.log($('#name'))
+                       window.location.reload();
                     }
                 })
                 return false;
             }); 
-        }); 
+
+            $('#myForm2').submit(function() { 
+              const new_sections = $("#myForm2").serializeArray().map(function(v) {return v.value});
+              let promise = $.Deferred().resolve().promise();
+              $.each(new_sections, function(index, value) {
+                if(!loaded_sections.includes(value)){
+                  promise = promise.then(function() {
+                    return $.ajax({
+                    type: 'POST',
+                    url: base + `/restaurant/${update_val}/section/${value}`,
+                  })} );
+                }
+              })
+
+              $.each(loaded_sections, function(index, value) {
+                if(!new_sections.includes(value)){
+                  promise = promise.then(function() {
+                    return $.ajax({
+                    type: 'DELETE',
+                    url: base + `/restaurant/${update_val}/section/${value}`,
+                  })} );
+                }
+              })
+
+              promise = promise.then(function() { window.location.reload()})
+              return false;
+            });
+        });
+
+      function onClickDelete(id) {
+        $('#' + id).remove();
+      }
+
+      function onClick(value) {
+        const id = "input_" + Math.floor(Math.random() * 10e10)
+        $(`
+          <div class="form-group">
+            <div class="form-inline" id="${id}">
+              <div class="form-group">
+                <div class="i-checks">
+                  <input type="text" name="f" class="form-control" id="name" value ="${value}" placeholder="Restaurant A">
+                  <button type="button" class="btn btn-light" onclick="onClickDelete('${id}')">-</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          `).insertBefore($('#myForm2')[0][$('#myForm2')[0].length - 2]);
+      }
   </script> 
 </head>
 
@@ -58,7 +140,7 @@
                       <p class="card-description">
                         Basic form layout
                       </p>
-                      <form class="forms-sample" id="myForm" target="_blank" action="https://foodie-server-prod.herokuapp.com/restaurant" method="post">
+                      <form class="forms-sample" id="myForm" action="https://foodie-server-prod.herokuapp.com/restaurant" method="post">
                         <div class="form-group">
                           <label for="name">Restaurant Name</label>
                           <input type="text" name="name" class="form-control" id="name" placeholder="Restaurant A">
@@ -83,7 +165,27 @@
                           <label for="cuisine_type">Cuisine Type</label>
                           <input type="text" name="cuisine_type" class="form-control" id="cuisine_type" placeholder="Restaurant A">
                         </div>
-                        <button type="submit" class="btn btn-success mr-2">Submit</button>
+                        <button type="submit" class="btn btn-success mr-2">Update</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 d-flex align-items-stretch grid-margin">
+              <div class="row flex-grow">
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Default form</h4>
+                      <p class="card-description">
+                        Basic form layout
+                      </p>
+                      <form class="forms-sample" id="myForm2" action="https://foodie-server-prod.herokuapp.com/restaurant" method="post">
+                        <button type="submit" class="btn btn-success mr-2">Update</button>
+                        <button type="button" class="btn btn-light" onclick="onClick('')">+</button>
                       </form>
                     </div>
                   </div>
