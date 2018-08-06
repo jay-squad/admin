@@ -5,6 +5,11 @@ let promise = $.Deferred().resolve().promise();
 // wait for the DOM to be loaded
 $(document).ready(function() {
 
+      var title = document.createElement('h4');
+      title.setAttribute('class', 'card-title');
+      title.textContent = 'Restuarant id: '+ restaurant_id;
+      $('#dishes-container').prepend(title);
+
       var d = new Date();
       d.setMinutes(d.getMinutes() + 30);
 
@@ -15,8 +20,8 @@ $(document).ready(function() {
               endpoint: 'foodie-prod-menu-item-images.s3.amazonaws.com',
           },
           credentials: {
-              accessKey: 'AKIAIF65I4KJKXVFITBA',//'AKIAJLKXOPME7NNZYVUA',
-              secretKey: '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',//'ubEyJH93OYwblR87isz8f35Varcg',
+              accessKey: 'AKIAIFYHWL2HA2CTAWFQ',
+              secretKey: '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',
               expiration: d
           },
           signature: {
