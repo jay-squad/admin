@@ -76,10 +76,11 @@
             });
 
             $('#myForm2').submit(function() {
-              const new_sections = $("#myForm2").serializeArray().map(function(v) {return v.value});
+              let new_sections = $("#myForm2").serializeArray().map(function(v) {return v.value});
+              new_sections = Array.from(new Set(new_sections))
               let promise = $.Deferred().resolve().promise();
               $.each(new_sections, function(index, value) {
-                if(!loaded_sections.includes(value)){
+                if(!loaded_sections.includes(value) && value != ""){
                   promise = promise.then(function() {
                     return $.ajax({
                     type: 'POST',
@@ -89,7 +90,7 @@
               })
 
               $.each(loaded_sections, function(index, value) {
-                if(!new_sections.includes(value)){
+                if(!new_sections.includes(value) && value != ""){
                   promise = promise.then(function() {
                     return $.ajax({
                     type: 'DELETE',
