@@ -5,7 +5,7 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Star Admin Free Bootstrap-4 Admin Dashboard Template</title>
+  <title>Admin New Restaurant</title>
   <!-- plugins:css -->
   <link rel="stylesheet" href="../../vendors/iconfonts/mdi/css/materialdesignicons.min.css">
   <link rel="stylesheet" href="../../vendors/css/vendor.bundle.base.css">
@@ -33,7 +33,7 @@
                     data: $('#myForm').serialize(),
                     dataType: 'json',
                     success: function(json) {
-                       window.location.href = "basic_elements2.html?id=" + json['id'];
+                       window.location.href = "update_restaurant.html?id=" + json['id'];
                        console.log($('#name'))
                     }
                 })
@@ -49,6 +49,7 @@
       <div class="main-panel" style="width:100%;">
         <div class="content-wrapper">
           <div class="row">
+            <div class="col-md-3"></div>
             <div class="col-md-6 d-flex align-items-stretch grid-margin">
               <div class="row flex-grow">
                 <div class="col-12">
@@ -65,23 +66,23 @@
                         </div>
                         <div class="form-group">
                           <label for="longitude">Longitude</label>
-                          <input type="text" name="longitude" class="form-control" id="longitude" placeholder="Restaurant A">
+                          <input type="text" name="longitude" class="form-control" id="longitude" placeholder="3.1415">
                         </div>
                         <div class="form-group">
                           <label for="latitude">Latitude</label>
-                          <input type="text" name="latitude" class="form-control" id="latitude" placeholder="Restaurant A">
+                          <input type="text" name="latitude" class="form-control" id="latitude" placeholder="5.1413">
                         </div>
                         <div class="form-group">
                           <label for="description">Description</label>
-                          <input type="text" name="description" class="form-control" id="description" placeholder="Restaurant A">
+                          <input type="text" name="description" class="form-control" id="description" placeholder="The best restaurant A in Waterloo">
                         </div>
                         <div class="form-group">
                           <label for="phone_number">Phone Number</label>
-                          <input type="text" name="phone_number" class="form-control" id="phone_number" placeholder="Restaurant A">
+                          <input type="text" name="phone_number" class="form-control" id="phone_number" placeholder="123-456-7890">
                         </div>
                         <div class="form-group">
                           <label for="cuisine_type">Cuisine Type</label>
-                          <input type="text" name="cuisine_type" class="form-control" id="cuisine_type" placeholder="Restaurant A">
+                          <input type="text" name="cuisine_type" class="form-control" id="cuisine_type" placeholder="American">
                         </div>
                         <button type="submit" class="btn btn-success mr-2">Submit</button>
                       </form>

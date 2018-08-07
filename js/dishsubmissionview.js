@@ -1,10 +1,19 @@
-var uploaded = {};
-var restaurant_id = 5;
+let uploaded = {};
+let restaurant_id = 0;
 let promise = $.Deferred().resolve().promise();
 
 // wait for the DOM to be loaded
 $(document).ready(function() {
-
+      $.urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^]*)').exec(window.location.href);
+        if (results==null){
+           return null;
+        }
+        else{
+           return results[1] || 0;
+        }
+      }
+      restaurant_id = $.urlParam("id");
       var title = document.createElement('h4');
       title.setAttribute('class', 'card-title');
       title.textContent = 'Restuarant id: '+ restaurant_id;

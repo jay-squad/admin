@@ -4,6 +4,6 @@ $(document).ready(function() {
     });
 
     $( "#create-restaurant" ).click(function() {
-      window.location.href = "pages/forms/basic_elements.html";
+      window.location.href = "pages/forms/new_restaurant.html";
     });
 });
