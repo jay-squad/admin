@@ -22,6 +22,7 @@ $(document).ready(function() {
 
 function appendResult(restaurant) {
     $(`<div class="row" id="result-id-${restaurant["id"]}">
+              <div class="col-md-3"></div>
               <div class="col-md-6 d-flex align-items-stretch grid-margin">
                 <div class="row flex-grow">
                   <div class="col-12">
@@ -50,7 +51,7 @@ function appendResult(restaurant) {
 }
 
 function onClickInfo(id) {
-    window.location.href = "basic_elements2.html?id="+id;
+    window.location.href = "update_restaurant.html?id="+id;
 }
 
 function onClickAdd(id) {
