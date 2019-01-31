@@ -28,7 +28,8 @@ gulp.task('serve', ['sass'], function () {
         port: 3000,
         server: "./",
         ghostMode: false,
-        notify: false
+        notify: false,
+	index: "./home.html"
     });
 
     gulp.watch('scss/**/*.scss', ['sass']);

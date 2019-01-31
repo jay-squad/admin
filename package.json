@@ -1,7 +1,7 @@
 {
-  "name": "Star-Admin-Free",
+  "name": "star-admin-free",
   "version": "2.0.0",
-  "description": "",
+  "description": "<h1>StarAdmin-Free-Bootstrap-Admin-Template</h1> Star Admin is a free responsive admin template built with Bootstrap 4. The template has colorful, attractive yet simple and elegant design. The template is well crafted, with all the components neatly and carefully designed and arranged within the template.",
   "main": "index.html",
   "dependencies": {
     "bootstrap": "4.0.0",
@@ -12,11 +12,12 @@
     "gulp-sourcemaps": "^2.6.3",
     "jquery": "3.2.1",
     "mdi": "2.1.19",
+    "merge-stream": "^1.0.1",
     "popper.js": "1.12.9",
     "simple-line-icons": "2.4.1"
   },
   "devDependencies": {
-    "browser-sync": "^2.16.0",
+    "browser-sync": "^2.26.3",
     "compass-mixins": "^0.12.10",
     "del": "2.2.2",
     "gulp": "^3.9.1",
@@ -37,5 +38,13 @@
   "author": "bootstrapdash",
   "url": "http://www.bootstrapdash.com/",
   "copyright": "",
-  "license": ""
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jay-squad/admin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jay-squad/admin/issues"
+  },
+  "homepage": "https://github.com/jay-squad/admin#readme"
 }
