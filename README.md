@@ -1,4 +1,13 @@
-To run:
+## To run:
+
+`npm install`
+
+
+`gulp serve`
+
+
+
+## Alternative:
 
 cd into directory with `index.php`
 
