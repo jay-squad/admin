@@ -28,7 +28,6 @@ function statusChangeCallback(response) {
     } else {
         $('#fb-login-button').show();
     }
-    console.log(response);
 }
 
 function checkLoginState() {
