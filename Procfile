@@ -1,2 +1,2 @@
-web: npm install
-web: vendor/bin/heroku-php-apache2 .
+release: npm install
+web: heroku-php-apache2
