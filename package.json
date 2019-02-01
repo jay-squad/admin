@@ -1,8 +1,8 @@
 {
-  "name": "star-admin-free",
-  "version": "2.0.0",
-  "description": "<h1>StarAdmin-Free-Bootstrap-Admin-Template</h1> Star Admin is a free responsive admin template built with Bootstrap 4. The template has colorful, attractive yet simple and elegant design. The template is well crafted, with all the components neatly and carefully designed and arranged within the template.",
-  "main": "index.html",
+  "name": "foodie",
+  "version": "1.0.0",
+  "description": "",
+  "main": "home.html",
   "dependencies": {
     "bootstrap": "4.0.0",
     "fine-uploader": "^5.16.2",
