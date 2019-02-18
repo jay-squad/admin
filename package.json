@@ -5,6 +5,7 @@
   "main": "home.html",
   "dependencies": {
     "bootstrap": "4.0.0",
+    "express": "^4.16.4",
     "fine-uploader": "^5.16.2",
     "font-awesome": "4.7.0",
     "gulp-sourcemaps": "^2.6.3",
@@ -20,10 +21,10 @@
   "scripts": {
     "clean": "rm -rf ./node_modules",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node index.js"
   },
-  "author": "bootstrapdash",
-  "url": "http://www.bootstrapdash.com/",
+  "author": "JAY",
+  "url": "http://www.beafoodie.com/",
   "copyright": "",
   "license": "ISC",
   "repository": {

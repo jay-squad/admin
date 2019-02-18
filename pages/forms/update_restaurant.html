@@ -32,8 +32,12 @@
       $(document).ready(function() {
             $.ajax({
               type: 'GET',
+              contentType: 'application/json',
+              dataType:'json',
+              responseType:'application/json',
               url: base + '/restaurant/' + update_val,
               success: function(json) {
+                console.log(json);
                 $('#name').val(json["name"]);
                 $('#latitude').val(json["latitude"]);
                 $('#longitude').val(json["longitude"]);
@@ -46,6 +50,8 @@
                 type: 'GET',
                 url: base + '/restaurant/' + update_val +'/menu',
                 success: function(json) {
+                  console.log("menu");
+                  console.log(json);
                   $.each(json, function(index, value) {
                     section = value[0]
                     loaded_sections.push(section)

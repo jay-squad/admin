@@ -7,6 +7,9 @@ $(document).ready(function() {
 
         $.ajax({
             type: 'GET',
+            contentType: 'application/json',
+            dataType:'json',
+            responseType:'application/json',
             url: $(this).attr('action') + '/' + query,
             success: function(json) {
                 $('#search-result').empty();
