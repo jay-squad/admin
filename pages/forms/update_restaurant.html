@@ -36,6 +36,7 @@
               dataType:'json',
               responseType:'application/json',
               url: base + '/restaurant/' + update_val,
+              xhrFields: { withCredentials:true },
               success: function(json) {
                 $('#name').val(json["name"]);
                 $('#latitude').val(json["latitude"]);
@@ -48,6 +49,7 @@
               return $.ajax({
                 type: 'GET',
                 url: base + '/restaurant/' + update_val +'/menu',
+                xhrFields: { withCredentials:true },
                 success: function(json) {
                   $.each(json, function(index, value) {
                     section = value[0];
@@ -64,6 +66,7 @@
                     url: $(this).attr('action') + '/' + update_val,
                     data: $('#myForm').serialize(),
                     dataType: 'json',
+                    xhrFields: { withCredentials:true },
                     success: function(json) {
                        window.location.reload();
                     }
@@ -81,7 +84,7 @@
                     return $.ajax({
                     type: 'POST',
                     url: base + `/restaurant/${update_val}/section/${value}`,
-                    data: {"admin_secret_key": getCookie("admin_secret_key")},
+                    xhrFields: { withCredentials:true },
                     dataType: 'json'
                   })} );
                 }
@@ -93,7 +96,7 @@
                     return $.ajax({
                     type: 'DELETE',
                     url: base + `/restaurant/${update_val}/section/${value}`,
-                    data: {"admin_secret_key": getCookie("admin_secret_key")},
+                    xhrFields: { withCredentials:true },
                     dataType: 'json'
                   })} );
                 }
@@ -107,8 +110,6 @@
               })
               return false;
             });
-
-            $(".admin_secret_key").val(getCookie("admin_secret_key"));
         });
 
       function onClickDelete(id) {
@@ -135,8 +136,9 @@
         $.ajax({
             type: 'PUT',
             url: `https://foodie-server-prod.herokuapp.com/restaurant/${update_val}/item/${item_id}/image`,
-            data: {"admin_secret_key": getCookie("admin_secret_key"), "approval_status": "approved", "item_image": image_link},
+            data: {"approval_status": "approved", "item_image": image_link},
             dataType: 'json',
+            xhrFields: { withCredentials:true },
             success: function(json) {
                //window.location.reload();
             }
@@ -147,8 +149,9 @@
         $.ajax({
             type: 'PUT',
             url: `https://foodie-server-prod.herokuapp.com/restaurant/${update_val}/item/${item_id}/image`,
-            data: {"admin_secret_key": getCookie("admin_secret_key"), "approval_status": "rejected", "item_image": image_link},
+            data: {"approval_status": "rejected", "item_image": image_link},
             dataType: 'json',
+            xhrFields: { withCredentials:true },
             success: function(json) {
                //window.location.reload();
             }
@@ -197,7 +200,6 @@
                   <label for="description">Menu Item Description</label>
                   <input type="text" name="description" value="${description}" class="form-control" placeholder="Description">
                 </div>
-                <input type="hidden" class="admin_secret_key" name="admin_secret_key" value="${getCookie("admin_secret_key")}">
                 <button type="submit" class="btn btn-outline-success btn-sm mr-0" style="font-size: 12px;">Update</button>
             </form>
             <div id="itemImages" style="padding-top: 10px;">
@@ -213,6 +215,7 @@
                 url: $(this).attr('action'),
                 data: $('#'+$(this).attr('id')).serialize(),
                 dataType: 'json',
+                xhrFields: { withCredentials:true },
                 success: function(json) {
                    window.location.reload();
                 }
@@ -330,7 +333,6 @@
                           <label for="cuisine_type">Cuisine Type</label>
                           <input type="text" name="cuisine_type" class="form-control" id="cuisine_type" placeholder="American">
                         </div>
-                        <input type="hidden" class="admin_secret_key" name="admin_secret_key" value="">
                         <button type="submit" class="btn btn-success mr-2">Update</button>
                       </form>
                     </div>
