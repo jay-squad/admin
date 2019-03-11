@@ -26,7 +26,7 @@ $(document).ready(function() {
       var uploader = new qq.s3.FineUploader({
           element: document.getElementById("uploader"),
           request: {
-              endpoint: 'foodie-prod-menu-item-images.s3.amazonaws.com',
+              endpoint: 'foodie-prod-dish-images.s3.amazonaws.com',
           },
           credentials: {
               accessKey: 'AKIAIFYHWL2HA2CTAWFQ',
@@ -46,7 +46,7 @@ $(document).ready(function() {
           },
           callbacks: {
               onComplete: function(id, name, responseJSON, xhr) {
-                  uploaded[id] = 'https://s3.us-east-2.amazonaws.com/foodie-prod-menu-item-images/' + uploaded[id]
+                  uploaded[id] = 'https://s3.us-east-2.amazonaws.com/foodie-prod-dish-images/' + uploaded[id]
               },
               onAllComplete: function(succeeded, failed) {
                   for (id in succeeded) {
