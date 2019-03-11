@@ -37,7 +37,6 @@
               responseType:'application/json',
               url: base + '/restaurant/' + update_val,
               success: function(json) {
-                console.log(json);
                 $('#name').val(json["name"]);
                 $('#latitude').val(json["latitude"]);
                 $('#longitude').val(json["longitude"]);
@@ -50,12 +49,11 @@
                 type: 'GET',
                 url: base + '/restaurant/' + update_val +'/menu',
                 success: function(json) {
-                  console.log("menu");
-                  console.log(json);
                   $.each(json, function(index, value) {
-                    section = value[0]
-                    loaded_sections.push(section)
-                    onClick(section);
+                    section = value[0];
+                    loaded_sections.push(section);
+                    onClickAdd(section);
+                    viewItems(value);
                   });
                 }
               })
@@ -75,7 +73,7 @@
 
             $('#myForm2').submit(function() {
               let new_sections = $("#myForm2").serializeArray().map(function(v) {return v.value});
-              new_sections = Array.from(new Set(new_sections))
+              new_sections = Array.from(new Set(new_sections));
               let promise = $.Deferred().resolve().promise();
               $.each(new_sections, function(index, value) {
                 if(!loaded_sections.includes(value) && value != ""){
@@ -83,6 +81,8 @@
                     return $.ajax({
                     type: 'POST',
                     url: base + `/restaurant/${update_val}/section/${value}`,
+                    data: {"admin_secret_key": getCookie("admin_secret_key")},
+                    dataType: 'json'
                   })} );
                 }
               })
@@ -93,21 +93,30 @@
                     return $.ajax({
                     type: 'DELETE',
                     url: base + `/restaurant/${update_val}/section/${value}`,
+                    data: {"admin_secret_key": getCookie("admin_secret_key")},
+                    dataType: 'json'
                   })} );
                 }
               })
 
-              promise = promise.then(function() { window.location.reload()})
+              // TODO: UPDATE MENU SECTION NAME VS DELETE AND ADD?????
+
+              promise = promise.then(function() { 
+                // TODO: LOL why doesn't this work????
+                //window.location.reload();
+              })
               return false;
             });
+
+            $(".admin_secret_key").val(getCookie("admin_secret_key"));
         });
 
       function onClickDelete(id) {
         $('#' + id).remove();
       }
 
-      function onClick(value) {
-        const id = "input_" + Math.floor(Math.random() * 10e10)
+      function onClickAdd(value) {
+        const id = "input_" + Math.floor(Math.random() * 10e10);
         $(`
           <div class="form-group">
             <div class="form-inline" id="${id}">
@@ -122,10 +131,162 @@
           `).insertBefore($('#myForm2')[0][$('#myForm2')[0].length - 2]);
       }
 
+      function imageStatusApprove(item_id, image_link) {
+        $.ajax({
+            type: 'PUT',
+            url: `https://foodie-server-prod.herokuapp.com/restaurant/${update_val}/item/${item_id}/image`,
+            data: {"admin_secret_key": getCookie("admin_secret_key"), "approval_status": "approved", "item_image": image_link},
+            dataType: 'json',
+            success: function(json) {
+               //window.location.reload();
+            }
+        })
+      }
+
+      function imageStatusReject(item_id, image_link) {
+        $.ajax({
+            type: 'PUT',
+            url: `https://foodie-server-prod.herokuapp.com/restaurant/${update_val}/item/${item_id}/image`,
+            data: {"admin_secret_key": getCookie("admin_secret_key"), "approval_status": "rejected", "item_image": image_link},
+            dataType: 'json',
+            success: function(json) {
+               //window.location.reload();
+            }
+        })
+      }
+
+      function setImageStatusButton(item_id, image_link, status) {
+        var html;
+        if (status === "pending") {
+          html = `<button class="btn btn-warning btn-sm" width="45%" value="approve" onclick="imageStatusApprove('${item_id}','${image_link}')">✔</button>
+                  <button class="btn btn-outline-warning btn-sm" width="45%" value="reject" onclick="imageStatusReject('${item_id}','${image_link}')">x</button>`;
+        } else if (status === "approved") {
+          html = `<button class="btn btn-outline-primary btn-sm" id="approved-image-button" onclick="imageStatusReject('${item_id}','${image_link}')"><span>Approved</span></button>`;
+        } else {
+          html = `<button class="btn btn-outline-secondary btn-sm" id="rejected-image-button" onclick="imageStatusApprove('${item_id}','${image_link}')"><span>Rejected</span></button>`;
+        }
+
+        document.getElementById(image_link).innerHTML = html;
+      }
+
+      function viewItems(value) {
+        var menuSection = value[0];
+        $.each(value[1], function(index, item) {
+          var name = item["item"]["normalized_name"];
+          var price = item["item"]["price"];
+          var description = item["item"]["description"];
+          var id = item["item"]["id"];
+
+          // TODO: REASSIGN MENU SECTION FOR AN ITEM?????
+          $(`
+          <div>
+            <form class="forms-sample" id="menuitem_${id}" action="https://foodie-server-prod.herokuapp.com/restaurant/${update_val}/item/${id}" method="post">
+                <div class="form-group">
+                  <small>Menu Section:  </small>
+                  <span>${menuSection}</span>
+                </div>
+                <div class="form-group">
+                  <label for="menuItem">Menu Item</label>
+                  <input type="text" name="name" value="${name}" class="form-control" placeholder="Menu Item">
+                </div>
+                <div class="form-group">
+                  <label for="price">Price</label>
+                  <input type="text" name="price" value="${price}" class="form-control" placeholder="Price">
+                </div>
+                <div class="form-group">
+                  <label for="description">Menu Item Description</label>
+                  <input type="text" name="description" value="${description}" class="form-control" placeholder="Description">
+                </div>
+                <input type="hidden" class="admin_secret_key" name="admin_secret_key" value="${getCookie("admin_secret_key")}">
+                <button type="submit" class="btn btn-outline-success btn-sm mr-0" style="font-size: 12px;">Update</button>
+            </form>
+            <div id="itemImages" style="padding-top: 10px;">
+
+            </div>
+            <hr>
+          </div>
+          `).insertAfter($('#menuItems'));
+
+          $('#menuitem_'+id).submit(function() {
+            $.ajax({
+                type: 'PUT',
+                url: $(this).attr('action'),
+                data: $('#'+$(this).attr('id')).serialize(),
+                dataType: 'json',
+                success: function(json) {
+                   window.location.reload();
+                }
+            })
+            return false;
+          });
+
+          $.each(item["item_images"], function(imgIndex, image) {
+            link = image["link"];
+            status = image["approval_status"];
+
+            $("#itemImages").append(`
+              <div width="150px" style="display: inline-grid;">
+                <a href="${link}"><img src="${link}" width="150px" style="image-orientation: from-image;"></a>
+                <div id="${link}">
+                </div>
+              </div>
+            `)
+
+            setImageStatusButton(id, link, status);
+          });
+
+        });
+        
+      }
+
       function loadAddItem() {
         window.location.href = "dish_upload.html?id=" + update_val;
       }
+
+      function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = document.cookie;
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+      }
+
   </script>
+  <style>
+    #approved-image-button:hover:before {
+      content: "Reject";
+    } 
+
+    #approved-image-button:hover {
+      background-color: red;
+      border-color: red;
+    }
+
+    #approved-image-button:hover span {
+      display: none;
+    }
+
+    #rejected-image-button:hover:before {
+      content: "Approve";
+    }
+
+    #rejected-image-button:hover {
+      background-color: green;
+      border-color: green;
+    }
+
+    #rejected-image-button:hover span {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
@@ -169,6 +330,7 @@
                           <label for="cuisine_type">Cuisine Type</label>
                           <input type="text" name="cuisine_type" class="form-control" id="cuisine_type" placeholder="American">
                         </div>
+                        <input type="hidden" class="admin_secret_key" name="admin_secret_key" value="">
                         <button type="submit" class="btn btn-success mr-2">Update</button>
                       </form>
                     </div>
@@ -190,7 +352,7 @@
                       </p>
                       <form class="forms-sample" id="myForm2" action="https://foodie-server-prod.herokuapp.com/restaurant" method="post">
                         <button type="submit" class="btn btn-success mr-2">Update</button>
-                        <button type="button" class="btn btn-light" onclick="onClick('')">+</button>
+                        <button type="button" class="btn btn-light" onclick="onClickAdd('')">+</button>
                       </form>
                     </div>
                   </div>
@@ -205,7 +367,7 @@
                 <div class="col-12">
                   <div class="card">
                     <div class="card-body">
-                      <h4 class="card-title">Add Menu Items</h4>
+                      <h4 class="card-title" id="menuItems">Add Menu Items</h4>
                       <button class="btn btn-success mr-2" onclick="loadAddItem()">Add Items</button>
                     </div>
                   </div>

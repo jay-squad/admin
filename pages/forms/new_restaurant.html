@@ -17,7 +17,6 @@
       // wait for the DOM to be loaded
       $(document).ready(function() {
             // bind 'myForm' and provide a simple callback function
-            console.log($('#myForm'))
             $('#myForm').submit(function() {
                 $.ajax({
                     type: 'POST',
@@ -26,12 +25,29 @@
                     dataType: 'json',
                     success: function(json) {
                        window.location.href = "update_restaurant.html?id=" + json['id'];
-                       console.log($('#name'))
                     }
                 })
                 return false;
             });
+
+            $(".admin_secret_key").val(getCookie("admin_secret_key"));
         });
+
+      function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = document.cookie;
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+      }
   </script>
 </head>
 
@@ -76,6 +92,7 @@
                           <label for="cuisine_type">Cuisine Type</label>
                           <input type="text" name="cuisine_type" class="form-control" id="cuisine_type" placeholder="American">
                         </div>
+                        <input type="hidden" class="admin_secret_key" name="admin_secret_key" value="">
                         <button type="submit" class="btn btn-success mr-2">Submit</button>
                       </form>
                     </div>
