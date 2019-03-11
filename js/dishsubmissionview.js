@@ -85,6 +85,13 @@ function appendForm(id) {
     addTextFormComponent('description', 'Description', 'description', f);
     addTextFormComponent('item_image', 'Image', uploaded[id], f, false);
 
+    var adminKey = document.createElement("input");
+    adminKey.setAttribute('type', 'hidden');
+    adminKey.setAttribute('class', 'admin_secret_key');
+    adminKey.setAttribute('name', 'admin_secret_key');
+    adminKey.setAttribute('value', getCookie('admin_secret_key'));
+    f.appendChild(adminKey);
+
     var submitbtn = document.createElement("button");
     submitbtn.setAttribute('type','submit');
     submitbtn.setAttribute('class','btn btn-success mr-2');
