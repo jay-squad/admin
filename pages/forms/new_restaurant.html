@@ -23,14 +23,13 @@
                     url: $(this).attr('action'),
                     data: $('#myForm').serialize(),
                     dataType: 'json',
+              	    xhrFields: { withCredentials:true },
                     success: function(json) {
                        window.location.href = "update_restaurant.html?id=" + json['id'];
                     }
                 })
                 return false;
             });
-
-            $(".admin_secret_key").val(getCookie("admin_secret_key"));
         });
 
       function getCookie(cname) {
