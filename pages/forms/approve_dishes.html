@@ -55,7 +55,6 @@
               success: function(json) {
                 $.each(json, function(index, value) {
                   var status = value["image"]["approval_status"];
-                  console.log(status);
                   if (status !== "pending") {
                     viewItems(value, "recentItems");
                   }
@@ -64,47 +63,47 @@
             });
       });
 
-      function imageStatusApprove(item_id, image_link) {
+      function imageStatusApprove(restaurant_id, item_id, image_link) {
         $.ajax({
             type: 'PUT',
-            url: `${base}/restaurant/${update_val}/item/${item_id}/image`,
+            url: `${base}/restaurant/${restaurant_id}/item/${item_id}/image`,
             data: {"approval_status": "approved", "item_image": image_link},
             dataType: 'json',
             xhrFields: { withCredentials:true },
             success: function(json) {
-              setImageStatusButton(item_id, image_link, "approved");
+              setImageStatusButton(restaurant_id, item_id, image_link, "approved");
                //window.location.reload();
             }
         })
       }
 
-      function imageStatusReject(item_id, image_link) {
+      function imageStatusReject(restaurant_id, item_id, image_link) {
         $.ajax({
             type: 'PUT',
-            url: `${base}/restaurant/${update_val}/item/${item_id}/image`,
+            url: `${base}/restaurant/${restaurant_id}/item/${item_id}/image`,
             data: {"approval_status": "rejected", "item_image": image_link},
             dataType: 'json',
             xhrFields: { withCredentials:true },
             success: function(json) {
-              setImageStatusButton(item_id, image_link, "rejected");
+              setImageStatusButton(restaurant_id, item_id, image_link, "rejected");
                //window.location.reload();
             }
         })
       }
 
-      function setImageStatusButton(item_id, image_link, status) {
+      function setImageStatusButton(restaurant_id, item_id, image_link, status) {
         var html;
         if (status === "pending") {
-          html = `<button class="btn btn-warning btn-sm" width="45%" value="approve" onclick="imageStatusApprove('${item_id}','${image_link}')">✔</button>
-                  <button class="btn btn-outline-warning btn-sm" width="45%" value="reject" onclick="imageStatusReject('${item_id}','${image_link}')">x</button>`;
+          html = `<button class="btn btn-warning btn-sm" width="45%" value="approve" onclick="imageStatusApprove('${restaurant_id}','${item_id}','${image_link}')">✔</button>
+                  <button class="btn btn-outline-warning btn-sm" width="45%" value="reject" onclick="imageStatusReject('${restaurant_id}','${item_id}','${image_link}')">x</button>`;
 
           document.getElementById("img_"+image_link).setAttribute("style", "opacity: 1; border:5px solid orange;");
         } else if (status === "approved") {
-          html = `<button class="btn btn-outline-primary btn-sm" id="approved-image-button" onclick="imageStatusReject('${item_id}','${image_link}')"><span>Approved</span></button>`;
+          html = `<button class="btn btn-outline-primary btn-sm" id="approved-image-button" onclick="imageStatusReject('${restaurant_id}','${item_id}','${image_link}')"><span>Approved</span></button>`;
 
           document.getElementById("img_"+image_link).setAttribute("style", "opacity: 1;");
         } else {
-          html = `<button class="btn btn-outline-secondary btn-sm" id="rejected-image-button" onclick="imageStatusApprove('${item_id}','${image_link}')"><span>Rejected</span></button>`;
+          html = `<button class="btn btn-outline-secondary btn-sm" id="rejected-image-button" onclick="imageStatusApprove('${restaurant_id}','${item_id}','${image_link}')"><span>Rejected</span></button>`;
 
           document.getElementById("img_"+image_link).setAttribute("style", "opacity: 0.5;");
         }
@@ -133,7 +132,7 @@
         // TODO: REASSIGN MENU SECTION FOR AN ITEM?????
         $('#'+html_id).append(`
         <div>
-          <form class="forms-sample" class="menuitem_${id}" action="https://foodie-server-prod.herokuapp.com/restaurant/${update_val}/item/${id}" method="post">
+          <form class="forms-sample" class="menuitem_${id}" action="https://foodie-server-prod.herokuapp.com/restaurant/${restaurant_id}/item/${id}" method="post">
               <div class="form-group">
                 <small>Restaurant:  </small>
                 <span class="restaurant_${restaurant_id}">${restaurant}</span>
@@ -190,7 +189,7 @@
           return false;
         });
         
-        setImageStatusButton(id, link, status);
+        setImageStatusButton(restaurant_id, id, link, status);
 
         $.ajax({
           type: 'GET',
