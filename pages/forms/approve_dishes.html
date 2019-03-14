@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Admin Approve Dishes</title>
+  <!-- inject:css -->
+  <link rel="stylesheet" href="../../css/style.css">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="../../images/favicon.png" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+  <script src="https://malsup.github.com/jquery.form.js"></script>
+  <script>
+      // bind 'myForm' and provide a simple callback function
+            $.urlParam = function(name){
+              var results = new RegExp('[\?&]' + name + '=([^]*)').exec(window.location.href);
+              if (results==null){
+                 return null;
+              }
+              else{
+                 return results[1] || 0;
+              }
+            }
+      const loaded_sections = []
+      const base = "https://foodie-server-prod.herokuapp.com"
+      const update_val = $.urlParam('id');
+
+      // wait for the DOM to be loaded
+      $(document).ready(function() {
+            $.ajax({
+              type: 'GET',
+              contentType: 'application/json',
+              dataType:'json',
+              responseType:'application/json',
+              url: base + '/image/pending',
+              xhrFields: { withCredentials:true },
+              success: function(json) {
+                $.each(json, function(index, value) {
+                  viewItems(value, "pendingItems");
+                });
+              }
+            });
+
+            $.ajax({
+              type: 'GET',
+              contentType: 'application/json',
+              dataType:'json',
+              responseType:'application/json',
+              url: base + '/image/recent',
+              data: {"updated_since": (new Date).getTime()-8.64e+7}, // TODO: doesnt work?
+              xhrFields: { withCredentials:true },
+              success: function(json) {
+                $.each(json, function(index, value) {
+                  var status = value["image"]["approval_status"];
+                  console.log(status);
+                  if (status !== "pending") {
+                    viewItems(value, "recentItems");
+                  }
+                });
+              }
+            });
+      });
+
+      function imageStatusApprove(item_id, image_link) {
+        $.ajax({
+            type: 'PUT',
+            url: `${base}/restaurant/${update_val}/item/${item_id}/image`,
+            data: {"approval_status": "approved", "item_image": image_link},
+            dataType: 'json',
+            xhrFields: { withCredentials:true },
+            success: function(json) {
+              setImageStatusButton(item_id, image_link, "approved");
+               //window.location.reload();
+            }
+        })
+      }
+
+      function imageStatusReject(item_id, image_link) {
+        $.ajax({
+            type: 'PUT',
+            url: `${base}/restaurant/${update_val}/item/${item_id}/image`,
+            data: {"approval_status": "rejected", "item_image": image_link},
+            dataType: 'json',
+            xhrFields: { withCredentials:true },
+            success: function(json) {
+              setImageStatusButton(item_id, image_link, "rejected");
+               //window.location.reload();
+            }
+        })
+      }
+
+      function setImageStatusButton(item_id, image_link, status) {
+        var html;
+        if (status === "pending") {
+          html = `<button class="btn btn-warning btn-sm" width="45%" value="approve" onclick="imageStatusApprove('${item_id}','${image_link}')">✔</button>
+                  <button class="btn btn-outline-warning btn-sm" width="45%" value="reject" onclick="imageStatusReject('${item_id}','${image_link}')">x</button>`;
+
+          document.getElementById("img_"+image_link).setAttribute("style", "opacity: 1; border:5px solid orange;");
+        } else if (status === "approved") {
+          html = `<button class="btn btn-outline-primary btn-sm" id="approved-image-button" onclick="imageStatusReject('${item_id}','${image_link}')"><span>Approved</span></button>`;
+
+          document.getElementById("img_"+image_link).setAttribute("style", "opacity: 1;");
+        } else {
+          html = `<button class="btn btn-outline-secondary btn-sm" id="rejected-image-button" onclick="imageStatusApprove('${item_id}','${image_link}')"><span>Rejected</span></button>`;
+
+          document.getElementById("img_"+image_link).setAttribute("style", "opacity: 0.5;");
+        }
+
+        document.getElementById(image_link).innerHTML = html;
+      }
+
+      function viewItems(value, html_id) {
+        var restaurant_id = value["item"]["restaurant_id"];
+
+        var menuSection = "coming soon TM";
+        var restaurant = "coming soon TM";
+
+
+        var name = value["item"]["normalized_name"];
+        var price = value["item"]["price"];
+        var description = value["item"]["description"];
+        var id = value["item"]["id"];
+
+        var link = value["image"]["link"];
+        var status = value["image"]["approval_status"];
+        var submitter = value["submitter"]["name"];
+        var submitter_points = value["submitter"]["points"];
+        var created_at = value["image"]["created_at"];
+
+        // TODO: REASSIGN MENU SECTION FOR AN ITEM?????
+        $('#'+html_id).append(`
+        <div>
+          <form class="forms-sample" class="menuitem_${id}" action="https://foodie-server-prod.herokuapp.com/restaurant/${update_val}/item/${id}" method="post">
+              <div class="form-group">
+                <small>Restaurant:  </small>
+                <span class="restaurant_${restaurant_id}">${restaurant}</span>
+              </div>
+              <div class="form-group">
+                <small>Menu Section:  </small>
+                <span>${menuSection}</span>
+              </div>
+              <div class="form-group">
+                <label for="menuItem">Menu Item</label>
+                <input type="text" name="name" value="${name}" class="form-control" placeholder="Menu Item">
+              </div>
+              <div class="form-group">
+                <label for="price">Price</label>
+                <input type="text" name="price" value="${price}" class="form-control" placeholder="Price">
+              </div>
+              <div class="form-group">
+                <label for="description">Menu Item Description</label>
+                <input type="text" name="description" value="${description}" class="form-control" placeholder="Description">
+              </div>
+              <button type="submit" class="btn btn-outline-success btn-sm mr-0" style="font-size: 12px;">Update</button>
+          </form>
+          <div style="padding-top: 10px;">
+            <div width="150px" style="display: inline-grid;">
+              <a href="${link}"><img id="img_${link}" src="${link}" width="150px" style="image-orientation: from-image;"></a>
+              <div id="${link}">
+              </div>
+            </div>
+            <div
+            <div style="padding-top:10px">
+              <small>Submitter: </small>
+              ${submitter}
+              (<small>Total Points: </small>
+              ${submitter_points}) 
+              <br/>
+              <small>img created: ${created_at}</small>
+            </div>
+          </div>
+          <hr>
+        </div>
+        `);
+
+        $('.menuitem_'+id).submit(function() {
+          $.ajax({
+              type: 'PUT',
+              url: $(this).attr('action'),
+              data: $('#'+$(this).attr('id')).serialize(),
+              dataType: 'json',
+              xhrFields: { withCredentials:true },
+              success: function(json) {
+                 window.location.reload();
+              }
+          })
+          return false;
+        });
+        
+        setImageStatusButton(id, link, status);
+
+        $.ajax({
+          type: 'GET',
+          contentType: 'application/json',
+          dataType:'json',
+          responseType:'application/json',
+          url: base + '/restaurant/' + restaurant_id,
+          xhrFields: { withCredentials:true },
+          success: function(json) {
+            $('.restaurant_'+restaurant_id).html(json["name"]);
+          }
+        });
+        
+      }
+
+  </script>
+  <style>
+    #approved-image-button:hover:before {
+      content: "Reject";
+    } 
+
+    #approved-image-button:hover {
+      background-color: red;
+      border-color: red;
+    }
+
+    #approved-image-button:hover span {
+      display: none;
+    }
+
+    #rejected-image-button:hover:before {
+      content: "Approve";
+    }
+
+    #rejected-image-button:hover {
+      background-color: green;
+      border-color: green;
+    }
+
+    #rejected-image-button:hover span {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-scroller">
+    <!-- <div class="container-fluid page-body-wrapper"> -->
+      <div class="main-panel" style="width:100%;">
+        <div class="content-wrapper">
+          
+          <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6 d-flex align-items-stretch grid-margin">
+              <div class="row flex-grow">
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Pending Dishes</h4>
+                      <div id="pendingItems">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6 d-flex align-items-stretch grid-margin">
+              <div class="row flex-grow">
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title">Recent Dishes</h4>
+                      <div id="recentItems">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- partial -->
+        </div>
+      <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  <!-- </div> -->
+  <!-- container-scroller -->
+  <!-- Plugin js for this page-->
+  <!-- End plugin js for this page-->
+  <!-- Custom js for this page-->
+  <!-- End custom js for this page-->
+</body>
+
+</html>

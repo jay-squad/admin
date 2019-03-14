@@ -7,6 +7,10 @@ $(document).ready(function() {
       window.location.href = "pages/forms/new_restaurant.html";
     });
 
+    $( "#approve-dishes" ).click(function() {
+      window.location.href = "pages/forms/approve_dishes.html";
+    });
+
     $.ajaxSetup({ cache: true });
     $.getScript('https://connect.facebook.net/en_US/sdk.js', function(){
         FB.init({

@@ -31,22 +31,6 @@
                 return false;
             });
         });
-
-      function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = document.cookie;
-        var ca = decodedCookie.split(';');
-        for(var i = 0; i <ca.length; i++) {
-          var c = ca[i];
-          while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-          }
-          if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-          }
-        }
-        return "";
-      }
   </script>
 </head>
 
@@ -73,11 +57,11 @@
                         </div>
                         <div class="form-group">
                           <label for="latitude">Latitude</label>
-                          <input type="text" name="latitude" class="form-control" id="latitude" placeholder="5.1413">
+                          <input type="text" name="latitude" class="form-control" id="latitude" placeholder="43">
                         </div>
                         <div class="form-group">
                           <label for="longitude">Longitude</label>
-                          <input type="text" name="longitude" class="form-control" id="longitude" placeholder="3.1415">
+                          <input type="text" name="longitude" class="form-control" id="longitude" placeholder="-80">
                         </div>
                         <div class="form-group">
                           <label for="description">Description</label>

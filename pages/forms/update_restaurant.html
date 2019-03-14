@@ -135,7 +135,7 @@
       function imageStatusApprove(item_id, image_link) {
         $.ajax({
             type: 'PUT',
-            url: `https://foodie-server-prod.herokuapp.com/restaurant/${update_val}/item/${item_id}/image`,
+            url: `${base}/restaurant/${update_val}/item/${item_id}/image`,
             data: {"approval_status": "approved", "item_image": image_link},
             dataType: 'json',
             xhrFields: { withCredentials:true },
@@ -149,7 +149,7 @@
       function imageStatusReject(item_id, image_link) {
         $.ajax({
             type: 'PUT',
-            url: `https://foodie-server-prod.herokuapp.com/restaurant/${update_val}/item/${item_id}/image`,
+            url: `${base}/restaurant/${update_val}/item/${item_id}/image`,
             data: {"approval_status": "rejected", "item_image": image_link},
             dataType: 'json',
             xhrFields: { withCredentials:true },
@@ -210,7 +210,7 @@
                 </div>
                 <button type="submit" class="btn btn-outline-success btn-sm mr-0" style="font-size: 12px;">Update</button>
             </form>
-            <div id="itemImages" style="padding-top: 10px;">
+            <div id="itemImages_${id}" style="padding-top: 10px;">
 
             </div>
             <hr>
@@ -232,10 +232,10 @@
           });
 
           $.each(item["item_images"], function(imgIndex, image) {
-            link = image["link"];
-            status = image["approval_status"];
+            var link = image["link"];
+            var status = image["approval_status"];
 
-            $("#itemImages").append(`
+            $("#itemImages_" + id).append(`
               <div width="150px" style="display: inline-grid;">
                 <a href="${link}"><img id="img_${link}" src="${link}" width="150px" style="image-orientation: from-image;"></a>
                 <div id="${link}">
@@ -252,22 +252,6 @@
 
       function loadAddItem() {
         window.location.href = "dish_upload.html?id=" + update_val;
-      }
-
-      function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = document.cookie;
-        var ca = decodedCookie.split(';');
-        for(var i = 0; i <ca.length; i++) {
-          var c = ca[i];
-          while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-          }
-          if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-          }
-        }
-        return "";
       }
 
   </script>
@@ -322,12 +306,12 @@
                           <input type="text" name="name" class="form-control" id="name" placeholder="Restaurant A">
                         </div>
                         <div class="form-group">
-                          <label for="longitude">Longitude</label>
-                          <input type="text" name="longitude" class="form-control" id="longitude" placeholder="3.1415">
+                          <label for="latitude">Latitude</label>
+                          <input type="text" name="latitude" class="form-control" id="latitude" placeholder="43">
                         </div>
                         <div class="form-group">
-                          <label for="latitude">Latitude</label>
-                          <input type="text" name="latitude" class="form-control" id="latitude" placeholder="5.1413">
+                          <label for="longitude">Longitude</label>
+                          <input type="text" name="longitude" class="form-control" id="longitude" placeholder="-80">
                         </div>
                         <div class="form-group">
                           <label for="description">Description</label>
@@ -358,7 +342,7 @@
                     <div class="card-body">
                       <h4 class="card-title">Change Menu Sections</h4>
                       <p class="card-description">
-                        Add, or delete menu sections
+                        Add or delete menu sections
                       </p>
                       <form class="forms-sample" id="myForm2" action="https://foodie-server-prod.herokuapp.com/restaurant" method="post">
                         <button type="submit" class="btn btn-success mr-2">Update</button>
