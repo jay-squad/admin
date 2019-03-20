@@ -41,8 +41,8 @@
                 $('#name').val(json["name"]);
                 $('#latitude').val(json["latitude"]);
                 $('#longitude').val(json["longitude"]);
-                $('#description').val(json["description"]);
-                $('#phone_number').val(json["phone_number"]);
+                $('#description').val(json["description"] ? json["description"] : "");
+                $('#phone_number').val(json["phone_number"] ? json["phone_number"] : "");
                 $('#cuisine_type').val(json["cuisine_type"]);
               }
             }).then( function() {
@@ -185,7 +185,7 @@
         $.each(value[1], function(index, item) {
           var name = item["item"]["normalized_name"];
           var price = item["item"]["price"];
-          var description = item["item"]["description"];
+          var description = item["item"]["description"] ? item["item"]["description"] : "";
           var id = item["item"]["id"];
 
           // TODO: REASSIGN MENU SECTION FOR AN ITEM?????

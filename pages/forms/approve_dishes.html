@@ -120,7 +120,7 @@
 
         var name = value["item"]["normalized_name"];
         var price = value["item"]["price"];
-        var description = value["item"]["description"];
+        var description = value["item"]["description"] ? value["item"]["description"] : "";
         var id = value["item"]["id"];
 
         var link = value["image"]["link"];
