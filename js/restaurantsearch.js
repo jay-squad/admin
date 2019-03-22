@@ -10,7 +10,7 @@ $(document).ready(function() {
             contentType: 'application/json',
             dataType:'json',
             responseType:'application/json',
-            url: $(this).attr('action') + '/' + query,
+            url: FOODIE_SERVER_BASE + "/search/restaurant/" + query,
             success: function(json) {
                 $('#search-result').empty();
 
@@ -41,7 +41,7 @@ function appendResult(restaurant) {
                         <b>Phone Number:</b> ${restaurant["phone_number"]}<br>
                         <b>Website:</b> ${restaurant["website"]}
                         </p>
-                        <form class="forms-sample" id="myForm2" action="https://foodie-server-prod.herokuapp.com/restaurant" method="post">
+                        <form class="forms-sample" id="myForm2" action="${FOODIE_SERVER_BASE}/restaurant" method="post">
                           <button type="button" class="btn btn-info mr-2" onclick="onClickInfo(${restaurant["id"]})">Edit Info</button>
                           <button type="button" class="btn btn-light" onclick="onClickAdd(${restaurant["id"]})">Add Menu Item</button>
                         </form>

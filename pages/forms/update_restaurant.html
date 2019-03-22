@@ -13,19 +13,19 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
   <script src="https://malsup.github.com/jquery.form.js"></script>
+  <script src="../../js/conf.js"></script>
   <script>
       // bind 'myForm' and provide a simple callback function
-            $.urlParam = function(name){
-              var results = new RegExp('[\?&]' + name + '=([^]*)').exec(window.location.href);
-              if (results==null){
-                 return null;
-              }
-              else{
-                 return results[1] || 0;
-              }
-            }
+      $.urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^]*)').exec(window.location.href);
+        if (results==null){
+           return null;
+        }
+        else{
+           return results[1] || 0;
+        }
+      }
       const loaded_sections = []
-      const base = "https://foodie-server-prod.herokuapp.com"
       const update_val = $.urlParam('id');
 
       // wait for the DOM to be loaded
@@ -35,7 +35,7 @@
               contentType: 'application/json',
               dataType:'json',
               responseType:'application/json',
-              url: base + '/restaurant/' + update_val,
+              url: FOODIE_SERVER_BASE + '/restaurant/' + update_val,
               xhrFields: { withCredentials:true },
               success: function(json) {
                 $('#name').val(json["name"]);
@@ -49,7 +49,7 @@
             }).then( function() {
               return $.ajax({
                 type: 'GET',
-                url: base + '/restaurant/' + update_val +'/menu',
+                url: FOODIE_SERVER_BASE + '/restaurant/' + update_val +'/menu',
                 xhrFields: { withCredentials:true },
                 success: function(json) {
                   $.each(json, function(index, value) {
@@ -64,7 +64,7 @@
             $('#myForm').submit(function() {
                 $.ajax({
                     type: 'PUT',
-                    url: $(this).attr('action') + '/' + update_val,
+                    url: FOODIE_SERVER_BASE + "/restaurant/" + update_val,
                     data: $('#myForm').serialize(),
                     dataType: 'json',
                     xhrFields: { withCredentials:true },
@@ -84,7 +84,7 @@
                   promise = promise.then(function() {
                     return $.ajax({
                     type: 'POST',
-                    url: base + `/restaurant/${update_val}/section/${value}`,
+                    url: FOODIE_SERVER_BASE + `/restaurant/${update_val}/section/${value}`,
                     xhrFields: { withCredentials:true },
                     dataType: 'json'
                   })} );
@@ -96,7 +96,7 @@
                   promise = promise.then(function() {
                     return $.ajax({
                     type: 'DELETE',
-                    url: base + `/restaurant/${update_val}/section/${value}`,
+                    url: FOODIE_SERVER_BASE + `/restaurant/${update_val}/section/${value}`,
                     xhrFields: { withCredentials:true },
                     dataType: 'json'
                   })} );
@@ -136,7 +136,7 @@
       function imageStatusApprove(item_id, image_link) {
         $.ajax({
             type: 'PUT',
-            url: `${base}/restaurant/${update_val}/item/${item_id}/image`,
+            url: `${FOODIE_SERVER_BASE}/restaurant/${update_val}/item/${item_id}/image`,
             data: {"approval_status": "approved", "item_image": image_link},
             dataType: 'json',
             xhrFields: { withCredentials:true },
@@ -150,7 +150,7 @@
       function imageStatusReject(item_id, image_link) {
         $.ajax({
             type: 'PUT',
-            url: `${base}/restaurant/${update_val}/item/${item_id}/image`,
+            url: `${FOODIE_SERVER_BASE}/restaurant/${update_val}/item/${item_id}/image`,
             data: {"approval_status": "rejected", "item_image": image_link},
             dataType: 'json',
             xhrFields: { withCredentials:true },
@@ -192,7 +192,7 @@
           // TODO: REASSIGN MENU SECTION FOR AN ITEM?????
           $(`
           <div>
-            <form class="forms-sample" id="menuitem_${id}" action="https://foodie-server-prod.herokuapp.com/restaurant/${update_val}/item/${id}" method="post">
+            <form class="forms-sample" id="menuitem_${id}" action="${FOODIE_SERVER_BASE}/restaurant/${update_val}/item/${id}" method="post">
                 <div class="form-group">
                   <small>Menu Section:  </small>
                   <span>${menuSection}</span>
@@ -301,7 +301,7 @@
                       <p class="card-description">
                         Enter in Restaurant Details
                       </p>
-                      <form class="forms-sample" id="myForm" action="https://foodie-server-prod.herokuapp.com/restaurant" method="post">
+                      <form class="forms-sample" id="myForm" action="" method="post">
                         <div class="form-group">
                           <label for="name">Restaurant Name</label>
                           <input type="text" name="name" class="form-control" id="name" placeholder="Restaurant A">
@@ -349,7 +349,7 @@
                       <p class="card-description">
                         Add or delete menu sections
                       </p>
-                      <form class="forms-sample" id="myForm2" action="https://foodie-server-prod.herokuapp.com/restaurant" method="post">
+                      <form class="forms-sample" id="myForm2" action="" method="post">
                         <button type="submit" class="btn btn-success mr-2">Update</button>
                         <button type="button" class="btn btn-light" onclick="onClickAdd('')">+</button>
                       </form>

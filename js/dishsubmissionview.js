@@ -60,7 +60,7 @@ $(document).ready(function() {
 function appendForm(id) {
     var f = document.createElement("form");
     f.setAttribute('method',"post");
-    f.setAttribute('action',"https://foodie-server-prod.herokuapp.com/restaurant/" + restaurant_id + "/item");
+    f.setAttribute('action',FOODIE_SERVER_BASE+"/restaurant/" + restaurant_id + "/item");
     // f.setAttribute('target',"_blank");
     f.setAttribute('class',"forms-sample");
 

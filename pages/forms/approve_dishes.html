@@ -13,21 +13,8 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
   <script src="https://malsup.github.com/jquery.form.js"></script>
+  <script src="../../js/conf.js"></script>
   <script>
-      // bind 'myForm' and provide a simple callback function
-            $.urlParam = function(name){
-              var results = new RegExp('[\?&]' + name + '=([^]*)').exec(window.location.href);
-              if (results==null){
-                 return null;
-              }
-              else{
-                 return results[1] || 0;
-              }
-            }
-      const loaded_sections = []
-      const base = "https://foodie-server-prod.herokuapp.com"
-      const update_val = $.urlParam('id');
-
       // wait for the DOM to be loaded
       $(document).ready(function() {
             $.ajax({
@@ -35,7 +22,7 @@
               contentType: 'application/json',
               dataType:'json',
               responseType:'application/json',
-              url: base + '/image/pending',
+              url: FOODIE_SERVER_BASE + '/image/pending',
               xhrFields: { withCredentials:true },
               success: function(json) {
                 $.each(json, function(index, value) {
@@ -49,7 +36,7 @@
               contentType: 'application/json',
               dataType:'json',
               responseType:'application/json',
-              url: base + '/image/recent',
+              url: FOODIE_SERVER_BASE + '/image/recent',
               data: {"updated_since": (new Date).getTime()-8.64e+7}, // TODO: doesnt work?
               xhrFields: { withCredentials:true },
               success: function(json) {
@@ -66,7 +53,7 @@
       function imageStatusApprove(restaurant_id, item_id, image_link) {
         $.ajax({
             type: 'PUT',
-            url: `${base}/restaurant/${restaurant_id}/item/${item_id}/image`,
+            url: `${FOODIE_SERVER_BASE}/restaurant/${restaurant_id}/item/${item_id}/image`,
             data: {"approval_status": "approved", "item_image": image_link},
             dataType: 'json',
             xhrFields: { withCredentials:true },
@@ -80,7 +67,7 @@
       function imageStatusReject(restaurant_id, item_id, image_link) {
         $.ajax({
             type: 'PUT',
-            url: `${base}/restaurant/${restaurant_id}/item/${item_id}/image`,
+            url: `${FOODIE_SERVER_BASE}/restaurant/${restaurant_id}/item/${item_id}/image`,
             data: {"approval_status": "rejected", "item_image": image_link},
             dataType: 'json',
             xhrFields: { withCredentials:true },
@@ -132,7 +119,7 @@
         // TODO: REASSIGN MENU SECTION FOR AN ITEM?????
         $('#'+html_id).append(`
         <div>
-          <form class="forms-sample" class="menuitem_${id}" action="https://foodie-server-prod.herokuapp.com/restaurant/${restaurant_id}/item/${id}" method="post">
+          <form class="forms-sample" class="menuitem_${id}" action="${FOODIE_SERVER_BASE}/restaurant/${restaurant_id}/item/${id}" method="post">
               <div class="form-group">
                 <small>Restaurant:  </small>
                 <span class="restaurant_${restaurant_id}">${restaurant}</span>
@@ -196,7 +183,7 @@
           contentType: 'application/json',
           dataType:'json',
           responseType:'application/json',
-          url: base + '/restaurant/' + restaurant_id,
+          url: FOODIE_SERVER_BASE + '/restaurant/' + restaurant_id,
           xhrFields: { withCredentials:true },
           success: function(json) {
             $('.restaurant_'+restaurant_id).html(json["name"]);

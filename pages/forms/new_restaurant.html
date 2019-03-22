@@ -13,6 +13,7 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
   <script src="https://malsup.github.com/jquery.form.js"></script>
+  <script src="../../js/conf.js"></script>
   <script>
       // wait for the DOM to be loaded
       $(document).ready(function() {
@@ -20,7 +21,7 @@
             $('#myForm').submit(function() {
                 $.ajax({
                     type: 'POST',
-                    url: $(this).attr('action'),
+                    url: FOODIE_SERVER_BASE + "/restaurant",
                     data: $('#myForm').serialize(),
                     dataType: 'json',
               	    xhrFields: { withCredentials:true },
@@ -50,7 +51,7 @@
                       <p class="card-description">
                         Enter in Restaurant Details
                       </p>
-                      <form class="forms-sample" id="myForm" target="_blank" action="https://foodie-server-prod.herokuapp.com/restaurant" method="post">
+                      <form class="forms-sample" id="myForm" target="_blank" action="" method="post">
                         <div class="form-group">
                           <label for="name">Restaurant Name</label>
                           <input type="text" name="name" class="form-control" id="name" placeholder="Restaurant A">
