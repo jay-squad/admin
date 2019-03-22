@@ -18,14 +18,6 @@
 </head>
 
 <body>
-  <div id="fb-root"></div>
-  <script>(function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
-    js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=2097330147147894&autoLogAppEvents=1';
-    fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));</script>
   <div class="container-scroller">
     <!-- <div class="container-fluid page-body-wrapper"> -->
       <div class="main-panel" style="width:100%;">
@@ -39,17 +31,6 @@
                     <button type="button" class="btn mr-2" id="search-restaurant">Search for a Restaurant</button>
                     <button type="button" class="btn mr-2" id="create-restaurant">Create a new Restaurant</button>
                     <button type="button" class="btn mr=2" id="approve-dishes">Approve Dishes</button>
-                  </div>
-                  <div style="padding-top:25px">
-                    <span id="fb-status"></span>
-                  </div>
-                  <div style="padding-top:25px" id="fb-login-button">
-                    <fb:login-button
-                      size="large"
-                      button-type="continue_with"
-                      scope="public_profile,email" 
-                      onlogin="checkLoginState();">
-                    </fb:login-button>
                   </div>
                 </div>
               </div>
