@@ -30,88 +30,88 @@
 
       // wait for the DOM to be loaded
       $(document).ready(function() {
+        $.ajax({
+          type: 'GET',
+          contentType: 'application/json',
+          dataType:'json',
+          responseType:'application/json',
+          url: FOODIE_SERVER_BASE + '/restaurant/' + update_val,
+          xhrFields: { withCredentials:true },
+          success: function(json) {
+            $('#name').val(json["name"]);
+            $('#latitude').val(json["latitude"]);
+            $('#longitude').val(json["longitude"]);
+            $('#description').val(json["description"] ? json["description"] : "");
+            $('#phone_number').val(json["phone_number"] ? json["phone_number"] : "");
+            $('#website').val(json["website"] ? json["website"] : "");
+            $('#cuisine_type').val(json["cuisine_type"]);
+          }
+        }).then( function() {
+          return $.ajax({
+            type: 'GET',
+            url: FOODIE_SERVER_BASE + '/restaurant/' + update_val +'/menu',
+            xhrFields: { withCredentials:true },
+            success: function(json) {
+              $.each(json, function(index, value) {
+                section = value[0];
+                loaded_sections.push(section);
+                onClickAdd(section);
+                viewItems(value);
+              });
+            }
+          })
+        });
+        $('#myForm').submit(function() {
             $.ajax({
-              type: 'GET',
-              contentType: 'application/json',
-              dataType:'json',
-              responseType:'application/json',
-              url: FOODIE_SERVER_BASE + '/restaurant/' + update_val,
-              xhrFields: { withCredentials:true },
-              success: function(json) {
-                $('#name').val(json["name"]);
-                $('#latitude').val(json["latitude"]);
-                $('#longitude').val(json["longitude"]);
-                $('#description').val(json["description"] ? json["description"] : "");
-                $('#phone_number').val(json["phone_number"] ? json["phone_number"] : "");
-                $('#website').val(json["website"] ? json["website"] : "");
-                $('#cuisine_type').val(json["cuisine_type"]);
-              }
-            }).then( function() {
-              return $.ajax({
-                type: 'GET',
-                url: FOODIE_SERVER_BASE + '/restaurant/' + update_val +'/menu',
+                type: 'PUT',
+                url: FOODIE_SERVER_BASE + "/restaurant/" + update_val,
+                data: $('#myForm').serialize(),
+                dataType: 'json',
                 xhrFields: { withCredentials:true },
                 success: function(json) {
-                  $.each(json, function(index, value) {
-                    section = value[0];
-                    loaded_sections.push(section);
-                    onClickAdd(section);
-                    viewItems(value);
-                  });
+                   window.location.reload();
                 }
-              })
-            });
-            $('#myForm').submit(function() {
-                $.ajax({
-                    type: 'PUT',
-                    url: FOODIE_SERVER_BASE + "/restaurant/" + update_val,
-                    data: $('#myForm').serialize(),
-                    dataType: 'json',
-                    xhrFields: { withCredentials:true },
-                    success: function(json) {
-                       window.location.reload();
-                    }
-                })
-                return false;
-            });
-
-            $('#myForm2').submit(function() {
-              let new_sections = $("#myForm2").serializeArray().map(function(v) {return v.value});
-              new_sections = Array.from(new Set(new_sections));
-              let promise = $.Deferred().resolve().promise();
-              $.each(new_sections, function(index, value) {
-                if(!loaded_sections.includes(value) && value != ""){
-                  promise = promise.then(function() {
-                    return $.ajax({
-                    type: 'POST',
-                    url: FOODIE_SERVER_BASE + `/restaurant/${update_val}/section/${value}`,
-                    xhrFields: { withCredentials:true },
-                    dataType: 'json'
-                  })} );
-                }
-              })
-
-              $.each(loaded_sections, function(index, value) {
-                if(!new_sections.includes(value) && value != ""){
-                  promise = promise.then(function() {
-                    return $.ajax({
-                    type: 'DELETE',
-                    url: FOODIE_SERVER_BASE + `/restaurant/${update_val}/section/${value}`,
-                    xhrFields: { withCredentials:true },
-                    dataType: 'json'
-                  })} );
-                }
-              })
-
-              // TODO: UPDATE MENU SECTION NAME VS DELETE AND ADD?????
-
-              promise = promise.then(function() { 
-                // TODO: LOL why doesn't this work????
-                //window.location.reload();
-              })
-              return false;
-            });
+            })
+            return false;
         });
+
+        $('#myForm2').submit(function() {
+          let new_sections = $("#myForm2").serializeArray().map(function(v) {return v.value});
+          new_sections = Array.from(new Set(new_sections));
+          let promise = $.Deferred().resolve().promise();
+          $.each(new_sections, function(index, value) {
+            if(!loaded_sections.includes(value) && value != ""){
+              promise = promise.then(function() {
+                return $.ajax({
+                type: 'POST',
+                url: FOODIE_SERVER_BASE + `/restaurant/${update_val}/section/${value}`,
+                xhrFields: { withCredentials:true },
+                dataType: 'json'
+              })} );
+            }
+          })
+
+          $.each(loaded_sections, function(index, value) {
+            if(!new_sections.includes(value) && value != ""){
+              promise = promise.then(function() {
+                return $.ajax({
+                type: 'DELETE',
+                url: FOODIE_SERVER_BASE + `/restaurant/${update_val}/section/${value}`,
+                xhrFields: { withCredentials:true },
+                dataType: 'json'
+              })} );
+            }
+          })
+
+          // TODO: UPDATE MENU SECTION NAME VS DELETE AND ADD?????
+
+          promise = promise.then(function() { 
+            // TODO: LOL why doesn't this work????
+            //window.location.reload();
+          })
+          return false;
+        });
+      });
 
       function onClickDelete(id) {
         $('#' + id).remove();
