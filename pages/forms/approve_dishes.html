@@ -14,89 +14,43 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
   <script src="https://malsup.github.com/jquery.form.js"></script>
   <script src="../../js/conf.js"></script>
+  <script src="../../js/image-approval-common.js"></script>
   <script>
       // wait for the DOM to be loaded
       $(document).ready(function() {
-            $.ajax({
-              type: 'GET',
-              contentType: 'application/json',
-              dataType:'json',
-              responseType:'application/json',
-              url: FOODIE_SERVER_BASE + '/image/pending',
-              xhrFields: { withCredentials:true },
-              success: function(json) {
-                $.each(json, function(index, value) {
-                  viewItems(value, "pendingItems");
-                });
-              }
+        $.ajax({
+          type: 'GET',
+          contentType: 'application/json',
+          dataType:'json',
+          responseType:'application/json',
+          url: FOODIE_SERVER_BASE + '/image/pending',
+          xhrFields: { withCredentials:true },
+          success: function(json) {
+            $.each(json, function(index, value) {
+              viewItems(value, "pendingItems");
             });
+          }
+        });
 
-            $.ajax({
-              type: 'GET',
-              contentType: 'application/json',
-              dataType:'json',
-              responseType:'application/json',
-              url: FOODIE_SERVER_BASE + '/image/recent',
-              data: {"updated_since": (new Date).getTime()-8.64e+7}, // TODO: doesnt work?
-              xhrFields: { withCredentials:true },
-              success: function(json) {
-                $.each(json, function(index, value) {
-                  var status = value["image"]["approval_status"];
-                  if (status !== "pending") {
-                    viewItems(value, "recentItems");
-                  }
-                });
+        $.ajax({
+          type: 'GET',
+          contentType: 'application/json',
+          dataType:'json',
+          responseType:'application/json',
+          url: FOODIE_SERVER_BASE + '/image/recent',
+          data: {"updated_since": (new Date).getTime()-8.64e+7}, // TODO: doesnt work?
+          xhrFields: { withCredentials:true },
+          success: function(json) {
+            $.each(json, function(index, value) {
+              var status = value["image"]["approval_status"];
+              if (status !== "pending") {
+                viewItems(value, "recentItems");
               }
             });
+          }
+        });
       });
-
-      function imageStatusApprove(restaurant_id, item_id, image_link) {
-        $.ajax({
-            type: 'PUT',
-            url: `${FOODIE_SERVER_BASE}/restaurant/${restaurant_id}/item/${item_id}/image`,
-            data: {"approval_status": "approved", "item_image": image_link},
-            dataType: 'json',
-            xhrFields: { withCredentials:true },
-            success: function(json) {
-              setImageStatusButton(restaurant_id, item_id, image_link, "approved");
-               //window.location.reload();
-            }
-        })
-      }
-
-      function imageStatusReject(restaurant_id, item_id, image_link) {
-        $.ajax({
-            type: 'PUT',
-            url: `${FOODIE_SERVER_BASE}/restaurant/${restaurant_id}/item/${item_id}/image`,
-            data: {"approval_status": "rejected", "item_image": image_link},
-            dataType: 'json',
-            xhrFields: { withCredentials:true },
-            success: function(json) {
-              setImageStatusButton(restaurant_id, item_id, image_link, "rejected");
-               //window.location.reload();
-            }
-        })
-      }
-
-      function setImageStatusButton(restaurant_id, item_id, image_link, status) {
-        var html;
-        if (status === "pending") {
-          html = `<button class="btn btn-warning btn-sm" width="45%" value="approve" onclick="imageStatusApprove('${restaurant_id}','${item_id}','${image_link}')">✔</button>
-                  <button class="btn btn-outline-warning btn-sm" width="45%" value="reject" onclick="imageStatusReject('${restaurant_id}','${item_id}','${image_link}')">x</button>`;
-
-          document.getElementById("img_"+image_link).setAttribute("style", "opacity: 1; border:5px solid orange;");
-        } else if (status === "approved") {
-          html = `<button class="btn btn-outline-primary btn-sm" id="approved-image-button" onclick="imageStatusReject('${restaurant_id}','${item_id}','${image_link}')"><span>Approved</span></button>`;
-
-          document.getElementById("img_"+image_link).setAttribute("style", "opacity: 1;");
-        } else {
-          html = `<button class="btn btn-outline-secondary btn-sm" id="rejected-image-button" onclick="imageStatusApprove('${restaurant_id}','${item_id}','${image_link}')"><span>Rejected</span></button>`;
-
-          document.getElementById("img_"+image_link).setAttribute("style", "opacity: 0.5;");
-        }
-
-        document.getElementById(image_link).innerHTML = html;
-      }
+      
 
       function viewItems(value, html_id) {
         var restaurant_id = value["item"]["restaurant_id"];
