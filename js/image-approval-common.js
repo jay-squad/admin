@@ -32,17 +32,17 @@ function setImageStatusButton(restaurant_id, item_id, image_link, status) {
     html = `<button class="btn btn-warning btn-sm" width="45%" value="approve" onclick="imageStatusApprove('${restaurant_id}','${item_id}','${image_link}')">✔</button>
             <button class="btn btn-outline-warning btn-sm" width="45%" value="reject" onclick="imageStatusReject('${restaurant_id}','${item_id}','${image_link}')">x</button>`;
 
-    document.getElementById("img_"+image_link).setAttribute("style", "opacity: 1; border:5px solid orange;");
+    document.getElementById(item_id+"_img_"+image_link).setAttribute("style", "opacity: 1; border:5px solid orange;");
   } else if (status === "approved") {
     html = `<button class="btn btn-outline-primary btn-sm" id="approved-image-button" onclick="imageStatusReject('${restaurant_id}','${item_id}','${image_link}')"><span>Approved</span></button>`;
 
-    document.getElementById("img_"+image_link).setAttribute("style", "opacity: 1;");
+    document.getElementById(item_id+"_img_"+image_link).setAttribute("style", "opacity: 1;");
   } else {
     html = `<button class="btn btn-outline-secondary btn-sm" id="rejected-image-button" onclick="imageStatusApprove('${restaurant_id}','${item_id}','${image_link}')"><span>Rejected</span></button>`;
 
-    document.getElementById("img_"+image_link).setAttribute("style", "opacity: 0.5;");
+    document.getElementById(item_id+"_img_"+image_link).setAttribute("style", "opacity: 0.5;");
   }
 
-  document.getElementById(image_link).innerHTML = html;
+  document.getElementById(item_id+"_"+image_link).innerHTML = html;
 }
 

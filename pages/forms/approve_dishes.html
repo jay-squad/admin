@@ -55,7 +55,7 @@
       function viewItems(value, html_id) {
         var restaurant_id = value["item"]["restaurant_id"];
 
-        var menuSection = "coming soon TM";
+        var menuSection = value["item"]["section"];
         var restaurant = "coming soon TM";
 
 
@@ -77,6 +77,9 @@
               <div class="form-group">
                 <small>Restaurant:  </small>
                 <span class="restaurant_${restaurant_id}">${restaurant}</span>
+                <div class="restaurant_${restaurant_id}_pending">
+
+                </div>
               </div>
               <div class="form-group">
                 <small>Menu Section:  </small>
@@ -98,8 +101,8 @@
           </form>
           <div style="padding-top: 10px;">
             <div width="150px" style="display: inline-grid;">
-              <a href="${link}"><img id="img_${link}" src="${link}" width="150px" style="image-orientation: from-image;"></a>
-              <div id="${link}">
+              <a href="${link}"><img id="${id}_img_${link}" src="${link}" width="150px" style="image-orientation: from-image;"></a>
+              <div id="${id}_${link}">
               </div>
             </div>
             <div
@@ -141,9 +144,41 @@
           xhrFields: { withCredentials:true },
           success: function(json) {
             $('.restaurant_'+restaurant_id).html(json["name"]);
+            pendingRestaurant(json);
           }
         });
         
+      }
+
+      function pendingRestaurant(restaurant) {
+        var border_style = "5px solid orange";
+
+        if (restaurant["approval_status"] === "approved") {
+          return;
+        } else if (restaurant["approval_status"] === "rejected") {
+          border_style = "5px solid red";
+        }
+        
+
+        $(`.restaurant_${restaurant["id"]}_pending`).append(`
+          <div style="border:${border_style}; ">
+            <small>
+              ID: ${restaurant["id"]}
+              <br>
+              Description: ${restaurant["description"]}
+              <br>
+              Latitude: ${restaurant["latitude"]}
+              <br>
+              Longitude: ${restaurant["longitude"]}
+              <br>
+              Phone Number: ${restaurant["phone_number"]}
+              <br>
+              Website: ${restaurant["website"]}
+              <br>
+              Cuisine Type: ${restaurant["cuisine_type"]}
+            </small>
+          </div>
+        `);
       }
 
   </script>
