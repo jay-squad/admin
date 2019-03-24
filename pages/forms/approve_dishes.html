@@ -163,7 +163,7 @@
         
 
         $(`.restaurant_${restaurant["id"]}_pending`).append(`
-          <div style="border:${border_style}; ">
+          <div>
             <small>
               ID: ${restaurant["id"]}
               <br>
@@ -180,17 +180,37 @@
               Cuisine Type: ${restaurant["cuisine_type"]}
             </small>
           </div>
-          <button class="btn btn-warning btn-sm" width="45%" value="approve" onclick="approveRestaurant()">✔</button>
-          <button class="btn btn-outline-warning btn-sm" width="45%" value="reject" onclick="rejectRestaurant()">x</button>
+          <button class="btn btn-warning btn-sm" width="45%" value="approve" onclick="approveRestaurant('${restaurant["id"]}')">✔</button>
+          <button class="btn btn-outline-warning btn-sm" width="45%" value="reject" onclick="rejectRestaurant('${restaurant["id"]}')">x</button>
         `);
+
+        $(`.restaurant_${restaurant["id"]}_pending`).attr("style", "border:"+border_style);
       }
 
-      function rejectRestaurant() {
-
+      function rejectRestaurant(restaurant_id) {
+        $.ajax({
+            type: 'PUT',
+            url: FOODIE_SERVER_BASE + "/restaurant/" + restaurant_id,
+            data: {"approval_status": "rejected"},
+            dataType: 'json',
+            xhrFields: { withCredentials:true },
+            success: function(json) {
+              $(`.restaurant_${restaurant_id}_pending`).attr("style", "border:5px solid red;");
+            }
+        })
       }
 
-      function approveRestaurant() {
-
+      function approveRestaurant(restaurant_id) {
+        $.ajax({
+            type: 'PUT',
+            url: FOODIE_SERVER_BASE + "/restaurant/" + restaurant_id,
+            data: {"approval_status": "approved"},
+            dataType: 'json',
+            xhrFields: { withCredentials:true },
+            success: function(json) {
+              $(`.restaurant_${restaurant_id}_pending`).attr("style", "border:5px solid green;");
+            }
+        })
       }
 
   </script>
