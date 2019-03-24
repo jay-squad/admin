@@ -38,7 +38,7 @@
           dataType:'json',
           responseType:'application/json',
           url: FOODIE_SERVER_BASE + '/image/recent',
-          data: {"updated_since": (new Date).getTime()-8.64e+7}, // TODO: doesnt work?
+          data: {"updated_since": parseInt(((new Date).getTime()/1000)-(8.64e+4)*3)}, // past 3 days
           xhrFields: { withCredentials:true },
           success: function(json) {
             $.each(json, function(index, value) {
@@ -118,7 +118,7 @@
 
             </div>
           </div>
-          <form class="forms-sample" id="menuitem_${id}_${link}" action="javascript: console.error('lol this dont work rn'); void(0);">
+          <form class="forms-sample" id="menuitem_${id}_${link}" action="javascript: console.error('lol this dont work rn, go to update_restaurant page to update'); void(0);">
               <div class="form-group">
                 <small>Menu Section:  </small>
                 <span>${menuSection}</span>
