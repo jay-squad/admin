@@ -73,14 +73,14 @@
         // TODO: REASSIGN MENU SECTION FOR AN ITEM?????
         $('#'+html_id).append(`
         <div>
-          <form class="forms-sample" class="menuitem_${id}" action="${FOODIE_SERVER_BASE}/restaurant/${restaurant_id}/item/${id}" method="post">
-              <div class="form-group">
-                <small>Restaurant:  </small>
-                <span class="restaurant_${restaurant_id}">${restaurant}</span>
-                <div class="restaurant_${restaurant_id}_pending">
+          <div>
+            <small>Restaurant:  </small>
+            <span class="restaurant_${restaurant_id}">${restaurant}</span>
+            <div class="restaurant_${restaurant_id}_pending">
 
-                </div>
-              </div>
+            </div>
+          </div>
+          <form class="forms-sample" id="menuitem_${id}_${link}" action="javascript: console.error('lol this dont work rn'); void(0);">
               <div class="form-group">
                 <small>Menu Section:  </small>
                 <span>${menuSection}</span>
@@ -105,13 +105,12 @@
               <div id="${id}_${link}">
               </div>
             </div>
-            <div
             <div style="padding-top:10px">
               <small>Submitter: </small>
               ${submitter}
               (<small>Total Points: </small>
               ${submitter_points}) 
-              <br/>
+              <br>
               <small>img created: ${created_at}</small>
             </div>
           </div>
@@ -119,7 +118,9 @@
         </div>
         `);
 
-        $('.menuitem_'+id).submit(function() {
+        $('#menuitem_'+id+'_'+link).submit(function() {
+          // TODO: this is broken. dunno why sigh.
+          console.log('submitting');
           $.ajax({
               type: 'PUT',
               url: $(this).attr('action'),
@@ -127,9 +128,9 @@
               dataType: 'json',
               xhrFields: { withCredentials:true },
               success: function(json) {
-                 window.location.reload();
+                 // window.location.reload();
               }
-          })
+          });
           return false;
         });
         
@@ -143,14 +144,15 @@
           url: FOODIE_SERVER_BASE + '/restaurant/' + restaurant_id,
           xhrFields: { withCredentials:true },
           success: function(json) {
-            $('.restaurant_'+restaurant_id).html(json["name"]);
-            pendingRestaurant(json);
+            addRestaurantDeets(json);
           }
         });
         
       }
 
-      function pendingRestaurant(restaurant) {
+      function addRestaurantDeets(restaurant) {
+        $('.restaurant_'+restaurant["id"]).html(`<a href="update_restaurant.html?id=${restaurant["id"]}">${restaurant["name"]}</a>`);
+
         var border_style = "5px solid orange";
 
         if (restaurant["approval_status"] === "approved") {
@@ -178,7 +180,17 @@
               Cuisine Type: ${restaurant["cuisine_type"]}
             </small>
           </div>
+          <button class="btn btn-warning btn-sm" width="45%" value="approve" onclick="approveRestaurant()">✔</button>
+          <button class="btn btn-outline-warning btn-sm" width="45%" value="reject" onclick="rejectRestaurant()">x</button>
         `);
+      }
+
+      function rejectRestaurant() {
+
+      }
+
+      function approveRestaurant() {
+
       }
 
   </script>

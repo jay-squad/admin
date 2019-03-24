@@ -46,6 +46,7 @@
             $('#phone_number').val(json["phone_number"] ? json["phone_number"] : "");
             $('#website').val(json["website"] ? json["website"] : "");
             $('#cuisine_type').val(json["cuisine_type"]);
+            $('#approval_status').val(json["approval_status"]);
           }
         }).then( function() {
           return $.ajax({
@@ -284,6 +285,14 @@
                         <div class="form-group">
                           <label for="cuisine_type">Cuisine Type</label>
                           <input type="text" name="cuisine_type" class="form-control" id="cuisine_type" placeholder="American">
+                        </div>
+                        <div class="form-group">
+                          <label for="approval_status">Approval Status</label>
+                          <select class="form-control" name="approval_status" id="approval_status">
+                            <option value="approved" style="color: green">Approved</option>
+                            <option value="rejected" style="color: red">Rejected</option>
+                            <option value="pending" style="color: orange">Pending</option>
+                          </select> 
                         </div>
                         <button type="submit" class="btn btn-success mr-2">Update</button>
                       </form>
