@@ -47,6 +47,8 @@
             $('#website').val(json["website"] ? json["website"] : "");
             $('#cuisine_type').val(json["cuisine_type"]);
             $('#approval_status').val(json["approval_status"]);
+            $('#latitude-link').html(`<a href="https://www.google.com/maps/search/?api=1&query=${json["latitude"]},${json["longitude"]}">Latitude</a>`);
+            $('#longitude-link').html(`<a href="https://www.google.com/maps/search/?api=1&query=${json["latitude"]},${json["longitude"]}">Longitude</a>`);
           }
         }).then( function() {
           return $.ajax({
@@ -113,6 +115,7 @@
           })
           return false;
         });
+
       });
 
       function onClickDelete(id) {
@@ -263,11 +266,11 @@
                           <input type="text" name="name" class="form-control" id="name" placeholder="Restaurant A">
                         </div>
                         <div class="form-group">
-                          <label for="latitude">Latitude</label>
+                          <label for="latitude" id="latitude-link">Latitude</label>
                           <input type="text" name="latitude" class="form-control" id="latitude" placeholder="43">
                         </div>
                         <div class="form-group">
-                          <label for="longitude">Longitude</label>
+                          <label for="longitude" id="longitude-link">Longitude</label>
                           <input type="text" name="longitude" class="form-control" id="longitude" placeholder="-80">
                         </div>
                         <div class="form-group">

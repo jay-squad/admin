@@ -107,6 +107,7 @@
         var submitter = value["submitter"]["name"];
         var submitter_points = value["submitter"]["points"];
         var created_at = value["image"]["created_at"];
+        var updated_at = value["image"]["updated_at"];
 
         // TODO: REASSIGN MENU SECTION FOR AN ITEM?????
         $('#'+html_id).append(`
@@ -150,6 +151,8 @@
               ${submitter_points}) 
               <br>
               <small>img created: ${created_at}</small>
+              <br>
+              <small>img updated: ${updated_at}</small>
             </div>
           </div>
           <hr>
@@ -207,10 +210,12 @@
               <br>
               Description: ${restaurant["description"]}
               <br>
+              <a href="https://www.google.com/maps/search/?api=1&query=${restaurant["latitude"]},${restaurant["longitude"]}">
               Latitude: ${restaurant["latitude"]}
               <br>
               Longitude: ${restaurant["longitude"]}
               <br>
+              </a>
               Phone Number: ${restaurant["phone_number"]}
               <br>
               Website: ${restaurant["website"]}
